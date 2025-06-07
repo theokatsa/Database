@@ -1,0 +1,110 @@
+-- Examples for the presentation of our database
+
+-- Examples for 3.1.3.1 CheckEvaluation
+
+CALL CheckEvaluation('nonexistent_evaluator', 'employee1', 123, @result);
+
+CALL CheckEvaluation('Douvris', 'nonexistent_employee', 123, @result);
+
+CALL CheckEvaluation('Douvris', 'Lious', 1, @result);
+
+
+-- Examples for 3.1.3.2 ManageApplication
+
+SELECT * FROM application_details;
+
+CALL ManageApplication('Xristopoulos', 1, 'i');
+CALL ManageApplication('Xristopoulos', 1, 'c');
+CALL ManageApplication('Xristopoulos', 1, 'a');
+CALL ManageApplication('Xristopoulos', 1, 'x');
+CALL ManageApplication('akuros', 1, 'i');
+CALL ManageApplication('Xristopoulos', 999, 'i');
+
+-- Examples for 3.1.3.3 fill_job_position
+
+CALL fill_job_position(0);
+CALL fill_job_position(7);
+CALL fill_job_position(1);
+CALL fill_job_position(2);
+CALL fill_job_position(5);
+
+
+-- Examples for 3.1.3.4 filter_applications_by_ratings
+
+CALL filter_applications_by_ratings(5,14);
+CALL filter_applications_by_ratings(1,20);
+
+-- Examples for 3.1.3.4 filter_applications_by_evaluator
+
+CALL filter_applications_by_evaluator('Douvris');
+CALL filter_applications_by_evaluator('Andrikopoulos');
+
+-- Examples for 3.1.4.1 dba_log triggers
+-- JOB TABLE
+
+SELECT * FROM dba_log;
+INSERT INTO job (start_date, salary, position, edra, evaluator, submission_date) 
+VALUES ('2024-02-01', 50000, 'Software Engineer', 'Athens', 'Douvris', '2024-01-15');
+
+UPDATE job SET salary = 55000 WHERE id = 1;
+
+DELETE FROM job WHERE id = 1;
+
+-- USER TABLE
+
+SELECT * FROM dba_log;
+INSERT INTO user (username, password, name, lastname, email) 
+VALUES ('john_doe', 'password123', 'John', 'Doe', 'john.doe@example.com');
+
+UPDATE user SET email = 'john.doe.updated@example.com' WHERE username = 'john_doe';
+
+DELETE FROM user WHERE username = 'john_doe';
+
+-- DEGREE TABLE 
+
+SELECT * FROM dba_log;
+INSERT INTO degree (titlos, idryma, bathmida) 
+VALUES ('Computer Science BSc', 'University of Example', 'BSc');
+
+UPDATE degree SET idryma = 'Another University' WHERE titlos = 'Computer Science BSc';
+
+DELETE FROM degree WHERE titlos = 'Computer Science BSc';
+
+-- Examples for 3.1.4.2 before_insert_application trigger
+
+SELECT * FROM job;
+SELECT * FROM application_details;
+DELETE FROM application_details
+WHERE cand_usrname = 'Papapaulou';
+
+INSERT INTO application_details (cand_usrname, job_id, status, application_date)
+VALUES ('Xristopoulos', 1, 'active', '2021-01-01'); -- error if repeated
+INSERT INTO application_details (cand_usrname, job_id, status, application_date)
+VALUES ('Papapaulou', 3, 'active', '2022-02-15');
+INSERT INTO application_details (cand_usrname, job_id, status, application_date)
+VALUES ('Papapaulou', 3, 'active', '2022-02-14');
+
+
+-- Examples for 3.1.4.3 before_update_application trigger
+
+SELECT * FROM job;
+SELECT * FROM application_details;
+DELETE FROM application_details WHERE cand_usrname = 'Papapaulou';
+
+INSERT INTO application_details (cand_usrname, job_id, status, application_date)
+VALUES ('Papapaulou', 3, 'active', '2022-01-01');
+UPDATE application_details
+SET status = 'cancelled', application_date = '2022-02-24'
+WHERE cand_usrname = 'Papapaulou' AND job_id = 3 AND status = 'active';
+
+INSERT INTO application_details (cand_usrname, job_id, status, application_date)
+VALUES ('Papapaulou', 3, 'active', '2022-01-01');
+INSERT INTO application_details (cand_usrname, job_id, status, application_date)
+VALUES ('Papapaulou', 3, 'active', '2022-01-01');
+
+UPDATE application_details
+SET status = 'cancelled', application_date = '2022-02-24'
+WHERE cand_usrname = 'Papapaulou' AND job_id = 3 AND status = 'active';
+
+
+DELETE FROM employee WHERE username='Papanikolaou';
