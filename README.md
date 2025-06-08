@@ -39,8 +39,4 @@ Databases project for 3rd year of Computer Engineering and Informatics Departmen
 
 ---
 
-📁 Μπορείς να ανεβάσεις στο αποθετήριο:
-- Το αρχείο `.sql` με όλες τις εντολές δημιουργίας/εισαγωγής
-- Το αρχείο PDF της αναφοράς
-- Οδηγίες εγκατάστασης ή εκτέλεσης των stored procedures
 
